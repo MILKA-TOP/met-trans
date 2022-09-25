@@ -1,4 +1,4 @@
-package models
+package models.exceptions
 
 class UnknownSymbolException(
     private val s: String? = null,

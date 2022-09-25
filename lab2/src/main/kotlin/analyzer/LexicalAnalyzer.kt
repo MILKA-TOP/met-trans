@@ -2,7 +2,7 @@ package analyzer
 
 import models.CurrentElement
 import models.Token
-import models.UnknownSymbolException
+import models.exceptions.UnknownSymbolException
 import java.io.IOException
 import java.io.InputStream
 import java.text.ParseException
@@ -36,7 +36,7 @@ class LexicalAnalyzer(private var input: InputStream) {
                 _currElement.token = Token.KLEENE
             }
             in 97..122 -> {
-                _currElement.symbol = _currElement.char
+                _currElement.value = _currElement.char.toChar().toString()
                 nextChar()
                 _currElement.token = Token.SYMBOL
             }
