@@ -1,6 +1,7 @@
 import analyzer.LexicalAnalyzer
 import analyzer.Parser
 import models.Token
+import models.Tree
 import models.exceptions.TestException
 import util.draw
 
@@ -63,7 +64,16 @@ private fun completeAnalyzerTest(regString: String, checkList: List<Token>) {
 }
 
 private fun completeParserTest(regString: String, filePath: String, isWithError: Boolean = false) {
-    val testAction: () -> Unit = { Parser().parse(regString).draw("$TEST_DIR$filePath") }
+    val testAction: () -> Unit = {
+        val resultTree = Parser().parse(regString)
+
+        val resultSb = StringBuilder()
+        updateSb(resultTree, resultSb)
+        val resultWithoutEps = resultSb.toString().replace(Parser.EPS, "")
+        if (resultWithoutEps != regString) throw Exception("Excepted `$regString, but caught $resultWithoutEps")
+
+        resultTree.draw("$TEST_DIR$filePath")
+    }
 
     if (isWithError) {
         try {
@@ -76,6 +86,11 @@ private fun completeParserTest(regString: String, filePath: String, isWithError:
     }
 
     println("COMPLETE PARSER TEST: $regString")
+}
+
+private fun updateSb(currentNode: Tree, sb: StringBuilder) {
+    if (currentNode.children.isEmpty()) sb.append(currentNode.node)
+    else currentNode.children.forEach { updateSb(it, sb) }
 }
 
 const val TEST_DIR = "tests/"
