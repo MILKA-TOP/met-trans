@@ -19,15 +19,9 @@ class Parser {
     private fun getToken() = analyzer.currElement.token
 
     private fun eState(): Tree = when (getToken()) {
-        Token.SYMBOL, Token.LPAREN -> Tree("E", ePrimeState())
+        Token.SYMBOL, Token.LPAREN -> Tree("E", listOf(tState(), eState()))
         Token.END, Token.RPAREN -> Tree("E", EPS)
         else -> throw ParserStateException(getToken().toString(), "E")
-    }
-
-    private fun ePrimeState(): Tree = when (getToken()) {
-        Token.SYMBOL, Token.LPAREN -> Tree("E'", listOf(tState(), ePrimeState()))
-        Token.END, Token.RPAREN -> Tree("E'", EPS)
-        else -> throw ParserStateException(getToken().toString(), "E'")
     }
 
     private fun tState(): Tree = when (getToken()) {
