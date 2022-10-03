@@ -18,7 +18,7 @@ fun Tree.draw() {
 
 fun Tree.draw(fileName: String? = null) {
     val g: Graph = graph("parser-tree").directed()
-        .with(downDraw2(node(this), this, this.children))
+        .with(downDraw2(node(this), this))
 
     Graphviz.fromGraph(g)
         .height(2500)
@@ -27,11 +27,11 @@ fun Tree.draw(fileName: String? = null) {
 
 }
 
-private fun downDraw2(parentNode: Node, parentTree: Tree, children: List<Tree>): List<LinkSource> {
-    val childrenList = children.map { Pair(it, node(it)) }
+private fun downDraw2(parentNode: Node, parentTree: Tree): List<LinkSource> {
+    val childrenList = parentTree.children.map { Pair(it, node(it)) }
     val output: MutableList<LinkSource> = childrenList.map { parentNode.link(to(it.second)) }.toMutableList()
     childrenList.forEach {
-        output.addAll(downDraw2(it.second, it.first, it.first.children))
+        output.addAll(downDraw2(it.second, it.first))
     }
 
     if (output.isEmpty()) {
