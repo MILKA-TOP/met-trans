@@ -7,16 +7,37 @@ import java.util.Map;
 
 @members {
 Map<String, Integer> expressionValues = new HashMap<>();
+String currentVar = "";
 }
 
-prog : (line)* EOF;
+prog returns [String out]
+@init {
+    $out = "";
+}: (resl+=line)* EOF
+    {
+    for (int i = 0; i < $resl.size(); i++) {
+        $out += $resl.get(i).res;
+    }
+    }
+    ;
 
-line :   ALPS EQUAL res1=expr LINE_END
+line returns [String res]
+@init {
+     $res = "";
+}:   ALPS EQUAL res1=expr LINE_END
      {
+     String output = "";
      String name = $ALPS.text;
-     Integer result = $res1.res;
-     System.out.println(name + " = " + String.valueOf(result));
-     expressionValues.put(name, result);
+     currentVar = name;
+     try {
+        Integer result = $res1.res;
+        output = name + " = " + String.valueOf(result);
+        expressionValues.put(name, result);
+     } catch (Exception e) {
+         output = "Error with this variable: " + name;
+     }
+     System.out.println(output);
+     $res = output + "\n";
      }
      ;
 
@@ -27,14 +48,27 @@ expr returns [Integer res] :
 
 multDivOp returns [Integer res] :
       res1=term MULT res2=multDivOp {$res = $res1.res * $res2.res;}
-    | res1=term DIV  res2=multDivOp {$res = $res1.res / $res2.res;}
+    | res1=term DIV  res2=multDivOp {
+    if ($res2.res == 0) {
+        System.out.println("Devision by zero in the variable " + currentVar);
+        $res = 0;
+    } else {
+        $res = $res1.res / $res2.res;
+    }
+}
     | res1=term {$res = $res1.res;};
 
 term returns [Integer res] :
       LB res1=expr RB {$res = $res1.res;}
-    | ALPS {$res = expressionValues.get($ALPS.text);}
-    | INT  {$res = Integer.parseInt($INT.text);};
-
+    | INT  {$res = Integer.parseInt($INT.text);}
+    | ALPS {
+        if (!expressionValues.containsKey($ALPS.text)) {
+            System.out.println($ALPS.text + " set as default value '0'");
+            expressionValues.put($ALPS.text, 0);
+        }
+        $res = expressionValues.get($ALPS.text);
+    }
+    ;
 
 EQUAL   : '=' ;
 LINE_END: ';' ;

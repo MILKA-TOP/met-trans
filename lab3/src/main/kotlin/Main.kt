@@ -11,13 +11,14 @@ fun main(args: Array<String>) {
             CommonTokenStream(
                 TerminalExpressionLexer(
                     CharStreams.fromString(
-                        "x      = 1; x = 2+((((((((2)))))))); y = x; z = ((x);"
+                        "с=+"
                     )
                 )
             )
         )
 
-
-    pars.prog()
+    val res = pars.prog().out
+    println("\n=====\n")
+    println(res)
 
 }

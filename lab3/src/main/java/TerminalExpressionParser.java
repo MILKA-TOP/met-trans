@@ -91,6 +91,7 @@ public class TerminalExpressionParser extends Parser {
 
 
 	Map<String, Integer> expressionValues = new HashMap<>();
+	String currentVar = "";
 
 	public TerminalExpressionParser(TokenStream input) {
 		super(input);
@@ -98,6 +99,9 @@ public class TerminalExpressionParser extends Parser {
 	}
 
 	public static class ProgContext extends ParserRuleContext {
+		public String out;
+		public LineContext line;
+		public List<LineContext> resl = new ArrayList<LineContext>();
 		public TerminalNode EOF() { return getToken(TerminalExpressionParser.EOF, 0); }
 		public List<LineContext> line() {
 			return getRuleContexts(LineContext.class);
@@ -127,6 +131,9 @@ public class TerminalExpressionParser extends Parser {
 	public final ProgContext prog() throws RecognitionException {
 		ProgContext _localctx = new ProgContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_prog);
+
+		    ((ProgContext)_localctx).out =  "";
+
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -138,7 +145,8 @@ public class TerminalExpressionParser extends Parser {
 				{
 				{
 				setState(10);
-				line();
+				((ProgContext)_localctx).line = line();
+				((ProgContext)_localctx).resl.add(((ProgContext)_localctx).line);
 				}
 				}
 				setState(15);
@@ -147,6 +155,11 @@ public class TerminalExpressionParser extends Parser {
 			}
 			setState(16);
 			match(EOF);
+
+			    for (int i = 0; i < ((ProgContext)_localctx).resl.size(); i++) {
+			        _localctx.out += ((ProgContext)_localctx).resl.get(i).res;
+			    }
+			    
 			}
 		}
 		catch (RecognitionException re) {
@@ -161,6 +174,7 @@ public class TerminalExpressionParser extends Parser {
 	}
 
 	public static class LineContext extends ParserRuleContext {
+		public String res;
 		public Token ALPS;
 		public ExprContext res1;
 		public TerminalNode ALPS() { return getToken(TerminalExpressionParser.ALPS, 0); }
@@ -191,22 +205,33 @@ public class TerminalExpressionParser extends Parser {
 	public final LineContext line() throws RecognitionException {
 		LineContext _localctx = new LineContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_line);
+
+		     ((LineContext)_localctx).res =  "";
+
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
-			((LineContext)_localctx).ALPS = match(ALPS);
 			setState(19);
-			match(EQUAL);
+			((LineContext)_localctx).ALPS = match(ALPS);
 			setState(20);
-			((LineContext)_localctx).res1 = expr();
+			match(EQUAL);
 			setState(21);
+			((LineContext)_localctx).res1 = expr();
+			setState(22);
 			match(LINE_END);
 
+			     String output = "";
 			     String name = (((LineContext)_localctx).ALPS!=null?((LineContext)_localctx).ALPS.getText():null);
-			     Integer result = ((LineContext)_localctx).res1.res;
-			     System.out.println(name + " = " + String.valueOf(result));
-			     expressionValues.put(name, result);
+			     currentVar = name;
+			     try {
+			        Integer result = ((LineContext)_localctx).res1.res;
+			        output = name + " = " + String.valueOf(result);
+			        expressionValues.put(name, result);
+			     } catch (Exception e) {
+			         output = "Error with this variable: " + name;
+			     }
+			     System.out.println(output);
+			     ((LineContext)_localctx).res =  output + "\n";
 			     
 			}
 		}
@@ -256,17 +281,17 @@ public class TerminalExpressionParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_expr);
 		try {
-			setState(37);
+			setState(38);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(24);
-				((ExprContext)_localctx).res1 = multDivOp();
 				setState(25);
-				match(PLUS);
+				((ExprContext)_localctx).res1 = multDivOp();
 				setState(26);
+				match(PLUS);
+				setState(27);
 				((ExprContext)_localctx).res2 = expr();
 				((ExprContext)_localctx).res =  ((ExprContext)_localctx).res1.res + ((ExprContext)_localctx).res2.res;
 				}
@@ -274,11 +299,11 @@ public class TerminalExpressionParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(29);
-				((ExprContext)_localctx).res1 = multDivOp();
 				setState(30);
-				match(MINUS);
+				((ExprContext)_localctx).res1 = multDivOp();
 				setState(31);
+				match(MINUS);
+				setState(32);
 				((ExprContext)_localctx).res2 = expr();
 				((ExprContext)_localctx).res =  ((ExprContext)_localctx).res1.res - ((ExprContext)_localctx).res2.res;
 				}
@@ -286,7 +311,7 @@ public class TerminalExpressionParser extends Parser {
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(34);
+				setState(35);
 				((ExprContext)_localctx).res1 = multDivOp();
 				((ExprContext)_localctx).res =  ((ExprContext)_localctx).res1.res;
 				}
@@ -339,17 +364,17 @@ public class TerminalExpressionParser extends Parser {
 		MultDivOpContext _localctx = new MultDivOpContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_multDivOp);
 		try {
-			setState(52);
+			setState(53);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(39);
-				((MultDivOpContext)_localctx).res1 = term();
 				setState(40);
-				match(MULT);
+				((MultDivOpContext)_localctx).res1 = term();
 				setState(41);
+				match(MULT);
+				setState(42);
 				((MultDivOpContext)_localctx).res2 = multDivOp();
 				((MultDivOpContext)_localctx).res =  ((MultDivOpContext)_localctx).res1.res * ((MultDivOpContext)_localctx).res2.res;
 				}
@@ -357,19 +382,26 @@ public class TerminalExpressionParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(44);
-				((MultDivOpContext)_localctx).res1 = term();
 				setState(45);
-				match(DIV);
+				((MultDivOpContext)_localctx).res1 = term();
 				setState(46);
+				match(DIV);
+				setState(47);
 				((MultDivOpContext)_localctx).res2 = multDivOp();
-				((MultDivOpContext)_localctx).res =  ((MultDivOpContext)_localctx).res1.res / ((MultDivOpContext)_localctx).res2.res;
+
+				    if (((MultDivOpContext)_localctx).res2.res == 0) {
+				        System.out.println("Devision by zero in the variable " + currentVar);
+				        ((MultDivOpContext)_localctx).res =  0;
+				    } else {
+				        ((MultDivOpContext)_localctx).res =  ((MultDivOpContext)_localctx).res1.res / ((MultDivOpContext)_localctx).res2.res;
+				    }
+
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(49);
+				setState(50);
 				((MultDivOpContext)_localctx).res1 = term();
 				((MultDivOpContext)_localctx).res =  ((MultDivOpContext)_localctx).res1.res;
 				}
@@ -390,15 +422,15 @@ public class TerminalExpressionParser extends Parser {
 	public static class TermContext extends ParserRuleContext {
 		public Integer res;
 		public ExprContext res1;
-		public Token ALPS;
 		public Token INT;
+		public Token ALPS;
 		public TerminalNode LB() { return getToken(TerminalExpressionParser.LB, 0); }
 		public TerminalNode RB() { return getToken(TerminalExpressionParser.RB, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode ALPS() { return getToken(TerminalExpressionParser.ALPS, 0); }
 		public TerminalNode INT() { return getToken(TerminalExpressionParser.INT, 0); }
+		public TerminalNode ALPS() { return getToken(TerminalExpressionParser.ALPS, 0); }
 		public TermContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -422,35 +454,41 @@ public class TerminalExpressionParser extends Parser {
 		TermContext _localctx = new TermContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_term);
 		try {
-			setState(63);
+			setState(64);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case LB:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(54);
-				match(LB);
 				setState(55);
-				((TermContext)_localctx).res1 = expr();
+				match(LB);
 				setState(56);
+				((TermContext)_localctx).res1 = expr();
+				setState(57);
 				match(RB);
 				((TermContext)_localctx).res =  ((TermContext)_localctx).res1.res;
 				}
 				break;
-			case ALPS:
+			case INT:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(59);
-				((TermContext)_localctx).ALPS = match(ALPS);
-				((TermContext)_localctx).res =  expressionValues.get((((TermContext)_localctx).ALPS!=null?((TermContext)_localctx).ALPS.getText():null));
-				}
-				break;
-			case INT:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(61);
+				setState(60);
 				((TermContext)_localctx).INT = match(INT);
 				((TermContext)_localctx).res =  Integer.parseInt((((TermContext)_localctx).INT!=null?((TermContext)_localctx).INT.getText():null));
+				}
+				break;
+			case ALPS:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(62);
+				((TermContext)_localctx).ALPS = match(ALPS);
+
+				        if (!expressionValues.containsKey((((TermContext)_localctx).ALPS!=null?((TermContext)_localctx).ALPS.getText():null))) {
+				            System.out.println((((TermContext)_localctx).ALPS!=null?((TermContext)_localctx).ALPS.getText():null) + " set as default value '0'");
+				            expressionValues.put((((TermContext)_localctx).ALPS!=null?((TermContext)_localctx).ALPS.getText():null), 0);
+				        }
+				        ((TermContext)_localctx).res =  expressionValues.get((((TermContext)_localctx).ALPS!=null?((TermContext)_localctx).ALPS.getText():null));
+				    
 				}
 				break;
 			default:
@@ -469,47 +507,47 @@ public class TerminalExpressionParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\u000bB\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u000bC\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0001"+
 		"\u0000\u0005\u0000\f\b\u0000\n\u0000\f\u0000\u000f\t\u0000\u0001\u0000"+
-		"\u0001\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
-		"\u0001\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
+		"\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
 		"\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0002\u0003\u0002&\b\u0002\u0001\u0003\u0001\u0003"+
+		"\u0001\u0002\u0001\u0002\u0001\u0002\u0003\u0002\'\b\u0002\u0001\u0003"+
 		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
-		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0003\u0003"+
-		"5\b\u0003\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
-		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004@\b\u0004"+
-		"\u0001\u0004\u0000\u0000\u0005\u0000\u0002\u0004\u0006\b\u0000\u0000C"+
-		"\u0000\r\u0001\u0000\u0000\u0000\u0002\u0012\u0001\u0000\u0000\u0000\u0004"+
-		"%\u0001\u0000\u0000\u0000\u00064\u0001\u0000\u0000\u0000\b?\u0001\u0000"+
-		"\u0000\u0000\n\f\u0003\u0002\u0001\u0000\u000b\n\u0001\u0000\u0000\u0000"+
-		"\f\u000f\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000\u0000\u0000\r\u000e"+
-		"\u0001\u0000\u0000\u0000\u000e\u0010\u0001\u0000\u0000\u0000\u000f\r\u0001"+
-		"\u0000\u0000\u0000\u0010\u0011\u0005\u0000\u0000\u0001\u0011\u0001\u0001"+
-		"\u0000\u0000\u0000\u0012\u0013\u0005\n\u0000\u0000\u0013\u0014\u0005\u0001"+
-		"\u0000\u0000\u0014\u0015\u0003\u0004\u0002\u0000\u0015\u0016\u0005\u0002"+
-		"\u0000\u0000\u0016\u0017\u0006\u0001\uffff\uffff\u0000\u0017\u0003\u0001"+
-		"\u0000\u0000\u0000\u0018\u0019\u0003\u0006\u0003\u0000\u0019\u001a\u0005"+
-		"\u0003\u0000\u0000\u001a\u001b\u0003\u0004\u0002\u0000\u001b\u001c\u0006"+
-		"\u0002\uffff\uffff\u0000\u001c&\u0001\u0000\u0000\u0000\u001d\u001e\u0003"+
-		"\u0006\u0003\u0000\u001e\u001f\u0005\u0004\u0000\u0000\u001f \u0003\u0004"+
-		"\u0002\u0000 !\u0006\u0002\uffff\uffff\u0000!&\u0001\u0000\u0000\u0000"+
-		"\"#\u0003\u0006\u0003\u0000#$\u0006\u0002\uffff\uffff\u0000$&\u0001\u0000"+
-		"\u0000\u0000%\u0018\u0001\u0000\u0000\u0000%\u001d\u0001\u0000\u0000\u0000"+
-		"%\"\u0001\u0000\u0000\u0000&\u0005\u0001\u0000\u0000\u0000\'(\u0003\b"+
-		"\u0004\u0000()\u0005\u0005\u0000\u0000)*\u0003\u0006\u0003\u0000*+\u0006"+
-		"\u0003\uffff\uffff\u0000+5\u0001\u0000\u0000\u0000,-\u0003\b\u0004\u0000"+
-		"-.\u0005\u0006\u0000\u0000./\u0003\u0006\u0003\u0000/0\u0006\u0003\uffff"+
-		"\uffff\u000005\u0001\u0000\u0000\u000012\u0003\b\u0004\u000023\u0006\u0003"+
-		"\uffff\uffff\u000035\u0001\u0000\u0000\u00004\'\u0001\u0000\u0000\u0000"+
-		"4,\u0001\u0000\u0000\u000041\u0001\u0000\u0000\u00005\u0007\u0001\u0000"+
-		"\u0000\u000067\u0005\u0007\u0000\u000078\u0003\u0004\u0002\u000089\u0005"+
-		"\b\u0000\u00009:\u0006\u0004\uffff\uffff\u0000:@\u0001\u0000\u0000\u0000"+
-		";<\u0005\n\u0000\u0000<@\u0006\u0004\uffff\uffff\u0000=>\u0005\t\u0000"+
-		"\u0000>@\u0006\u0004\uffff\uffff\u0000?6\u0001\u0000\u0000\u0000?;\u0001"+
-		"\u0000\u0000\u0000?=\u0001\u0000\u0000\u0000@\t\u0001\u0000\u0000\u0000"+
-		"\u0004\r%4?";
+		"\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003"+
+		"\u0003\u00036\b\u0003\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004"+
+		"\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004"+
+		"A\b\u0004\u0001\u0004\u0000\u0000\u0005\u0000\u0002\u0004\u0006\b\u0000"+
+		"\u0000D\u0000\r\u0001\u0000\u0000\u0000\u0002\u0013\u0001\u0000\u0000"+
+		"\u0000\u0004&\u0001\u0000\u0000\u0000\u00065\u0001\u0000\u0000\u0000\b"+
+		"@\u0001\u0000\u0000\u0000\n\f\u0003\u0002\u0001\u0000\u000b\n\u0001\u0000"+
+		"\u0000\u0000\f\u000f\u0001\u0000\u0000\u0000\r\u000b\u0001\u0000\u0000"+
+		"\u0000\r\u000e\u0001\u0000\u0000\u0000\u000e\u0010\u0001\u0000\u0000\u0000"+
+		"\u000f\r\u0001\u0000\u0000\u0000\u0010\u0011\u0005\u0000\u0000\u0001\u0011"+
+		"\u0012\u0006\u0000\uffff\uffff\u0000\u0012\u0001\u0001\u0000\u0000\u0000"+
+		"\u0013\u0014\u0005\n\u0000\u0000\u0014\u0015\u0005\u0001\u0000\u0000\u0015"+
+		"\u0016\u0003\u0004\u0002\u0000\u0016\u0017\u0005\u0002\u0000\u0000\u0017"+
+		"\u0018\u0006\u0001\uffff\uffff\u0000\u0018\u0003\u0001\u0000\u0000\u0000"+
+		"\u0019\u001a\u0003\u0006\u0003\u0000\u001a\u001b\u0005\u0003\u0000\u0000"+
+		"\u001b\u001c\u0003\u0004\u0002\u0000\u001c\u001d\u0006\u0002\uffff\uffff"+
+		"\u0000\u001d\'\u0001\u0000\u0000\u0000\u001e\u001f\u0003\u0006\u0003\u0000"+
+		"\u001f \u0005\u0004\u0000\u0000 !\u0003\u0004\u0002\u0000!\"\u0006\u0002"+
+		"\uffff\uffff\u0000\"\'\u0001\u0000\u0000\u0000#$\u0003\u0006\u0003\u0000"+
+		"$%\u0006\u0002\uffff\uffff\u0000%\'\u0001\u0000\u0000\u0000&\u0019\u0001"+
+		"\u0000\u0000\u0000&\u001e\u0001\u0000\u0000\u0000&#\u0001\u0000\u0000"+
+		"\u0000\'\u0005\u0001\u0000\u0000\u0000()\u0003\b\u0004\u0000)*\u0005\u0005"+
+		"\u0000\u0000*+\u0003\u0006\u0003\u0000+,\u0006\u0003\uffff\uffff\u0000"+
+		",6\u0001\u0000\u0000\u0000-.\u0003\b\u0004\u0000./\u0005\u0006\u0000\u0000"+
+		"/0\u0003\u0006\u0003\u000001\u0006\u0003\uffff\uffff\u000016\u0001\u0000"+
+		"\u0000\u000023\u0003\b\u0004\u000034\u0006\u0003\uffff\uffff\u000046\u0001"+
+		"\u0000\u0000\u00005(\u0001\u0000\u0000\u00005-\u0001\u0000\u0000\u0000"+
+		"52\u0001\u0000\u0000\u00006\u0007\u0001\u0000\u0000\u000078\u0005\u0007"+
+		"\u0000\u000089\u0003\u0004\u0002\u00009:\u0005\b\u0000\u0000:;\u0006\u0004"+
+		"\uffff\uffff\u0000;A\u0001\u0000\u0000\u0000<=\u0005\t\u0000\u0000=A\u0006"+
+		"\u0004\uffff\uffff\u0000>?\u0005\n\u0000\u0000?A\u0006\u0004\uffff\uffff"+
+		"\u0000@7\u0001\u0000\u0000\u0000@<\u0001\u0000\u0000\u0000@>\u0001\u0000"+
+		"\u0000\u0000A\t\u0001\u0000\u0000\u0000\u0004\r&5@";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

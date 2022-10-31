@@ -86,6 +86,7 @@ public class TerminalExpressionLexer extends Lexer {
 
 
 	Map<String, Integer> expressionValues = new HashMap<>();
+	String currentVar = "";
 
 
 	public TerminalExpressionLexer(CharStream input) {
