@@ -47,9 +47,8 @@ class Parser {
     }
 
     private fun dPrimeState(): Tree = when (getToken()) {
-        Token.KLEENE -> {
-            analyzer.nextToken()
-            Tree("D'", "*")
+        Token.KLEENE, Token.PLUS, Token.QUESTION -> {
+            Tree("D'", analyzer.currElement.value).also { analyzer.nextToken() }
         }
         Token.OR_OPERATION, Token.SYMBOL, Token.LPAREN, Token.END, Token.RPAREN ->
             Tree("D'", EPS)

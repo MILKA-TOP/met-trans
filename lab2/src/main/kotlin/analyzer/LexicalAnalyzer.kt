@@ -32,8 +32,19 @@ class LexicalAnalyzer(private var input: InputStream) {
                 _currElement.token = Token.OR_OPERATION
             }
             '*'.code -> {
+                _currElement.value = _currElement.char.toChar().toString()
                 nextChar()
                 _currElement.token = Token.KLEENE
+            }
+            '+'.code -> {
+                _currElement.value = _currElement.char.toChar().toString()
+                nextChar()
+                _currElement.token = Token.PLUS
+            }
+            '?'.code -> {
+                _currElement.value = _currElement.char.toChar().toString()
+                nextChar()
+                _currElement.token = Token.QUESTION
             }
             in 97..122 -> {
                 _currElement.value = _currElement.char.toChar().toString()

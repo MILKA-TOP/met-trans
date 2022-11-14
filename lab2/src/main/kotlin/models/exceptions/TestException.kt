@@ -7,6 +7,6 @@ class TestException(
     s: String? = null,
 ) : Exception(s) {
     override val message: String
-        get() = "Error in line `$regString`. Excepted `$expected`. but get $caught"
+        get() = "Error in line `$regString`. Excepted `$expected`. but get `$caught`"
 
 }

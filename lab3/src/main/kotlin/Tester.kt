@@ -11,6 +11,7 @@ private val inResMap = hashMapOf(
     File("./tests/hard_calc_in") to File("./tests/hard_calc_out"),
     File("./tests/one_var_in") to File("./tests/one_var_out"),
     File("./tests/simple_calc_in") to File("./tests/simple_calc_out"),
+    File("./tests/bonus_pow_unar_test_in") to File("./tests/bonus_pow_unar_test_out"),
 )
 
 fun main() {

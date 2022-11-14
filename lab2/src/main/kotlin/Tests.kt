@@ -27,17 +27,30 @@ private fun correctParserTests() {
     completeParserTest("(a|b)*()(())", "concat-triple-brackets.png")
     completeParserTest("((abc*b|a)*ab(aa|b*)b)*", "variant-test.png")
     completeParserTest("(((((((((((((((((((((((((())))))))))))))))))))))))))", "a-lot-of-brackets.png")
+
+    completeParserTest("a(b)+", "plus-brackets.png")
+    completeParserTest("a(b)?", "ques-brackets.png")
+    completeParserTest("a|b+", "or-with-plus.png")
+    completeParserTest("a|b?", "or-with-ques.png")
+    completeParserTest("(a|b)+", "or-plus-brackets.png")
+    completeParserTest("(a|b)?", "or-ques-brackets.png")
+    completeParserTest("(a|b)+()", "concat-double-brackets-plus.png")
+    completeParserTest("(a|b)?()", "concat-double-brackets-quest.png")
 }
 
 private fun errorParserTests() {
     completeParserTest("1", "unknown-symbol-single.png", true)
     completeParserTest("a1", "unknown-symbol.png", true)
     completeParserTest("a**", "double-kleene.png", true)
+    completeParserTest("a++", "double-plus.png", true)
+    completeParserTest("a??", "double-quest.png", true)
     completeParserTest("a||", "double-or.png", true)
     completeParserTest("a(", "opened-bracket.png", true)
     completeParserTest("a())", "more-close-brackets.png", true)
     completeParserTest("a((((())", "strange-brackets.png", true)
     completeParserTest("a(*)", "kleene-int-brackets.png", true)
+    completeParserTest("a(+)", "plus-int-brackets.png", true)
+    completeParserTest("a(?)", "quest-int-brackets.png", true)
 }
 
 private fun correctLexicalAnalyzerTest() {
@@ -45,10 +58,20 @@ private fun correctLexicalAnalyzerTest() {
     completeAnalyzerTest("()", listOf(Token.LPAREN, Token.RPAREN, Token.END))
     completeAnalyzerTest("a", listOf(Token.SYMBOL, Token.END))
     completeAnalyzerTest("a*", listOf(Token.SYMBOL, Token.KLEENE, Token.END))
+    completeAnalyzerTest("a+", listOf(Token.SYMBOL, Token.PLUS, Token.END))
+    completeAnalyzerTest("a?", listOf(Token.SYMBOL, Token.QUESTION, Token.END))
     completeAnalyzerTest("a*|b", listOf(Token.SYMBOL, Token.KLEENE, Token.OR_OPERATION, Token.SYMBOL, Token.END))
+    completeAnalyzerTest("a+|b", listOf(Token.SYMBOL, Token.PLUS, Token.OR_OPERATION, Token.SYMBOL, Token.END))
+    completeAnalyzerTest("a?|b", listOf(Token.SYMBOL, Token.QUESTION, Token.OR_OPERATION, Token.SYMBOL, Token.END))
     completeAnalyzerTest("(())", listOf(Token.LPAREN, Token.LPAREN, Token.RPAREN, Token.RPAREN, Token.END))
     completeAnalyzerTest(
         "a(b)*", listOf(Token.SYMBOL, Token.LPAREN, Token.SYMBOL, Token.RPAREN, Token.KLEENE, Token.END)
+    )
+    completeAnalyzerTest(
+        "a(b)+", listOf(Token.SYMBOL, Token.LPAREN, Token.SYMBOL, Token.RPAREN, Token.PLUS, Token.END)
+    )
+    completeAnalyzerTest(
+        "a(b)?", listOf(Token.SYMBOL, Token.LPAREN, Token.SYMBOL, Token.RPAREN, Token.QUESTION, Token.END)
     )
 }
 
