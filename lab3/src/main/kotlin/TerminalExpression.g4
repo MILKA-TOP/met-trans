@@ -42,43 +42,48 @@ line returns [String res]
      ;
 
 expr returns [Integer res] :
-      res1=multDivOp PLUS  res2=expr {$res = $res1.res + $res2.res;}
-    | res1=multDivOp {$res = $res1.res;} (MINUS res2=expr {$res -= $res2.res;})*
-    | res1=multDivOp {$res = $res1.res;};
+    res1=multDivOp res2=exprPoint[$res1.res] {$res = $res2.res;};
+
+exprPoint [Integer prev] returns [Integer res] :
+    {$res = $prev;}
+    | PLUS  res1=multDivOp res2=exprPoint[$prev + $res1.res] {$res = $res2.res;}
+    | MINUS res1=multDivOp res2=exprPoint[$prev - $res1.res] {$res = $res2.res;};
 
 multDivOp returns [Integer res] :
-      res1=term POW  res2=multDivOp {
-      Integer r1 = $res1.res;
-      Integer r2 = $res2.res;
-      Integer powResult = (int) Math.pow(r1, r2);
-      if (powResult == Integer.MAX_VALUE) {
-          System.out.println("Integer overflow after operation: " + String.valueOf(r1) + "**" + String.valueOf(r2) + "; returns Integer.MAX_VALUE");
-      }
-      $res = (int) Math.pow($res1.res, $res2.res);
-     }
-    | res1=term MULT res2=multDivOp {$res = $res1.res * $res2.res;}
-    | res1=term DIV  res2=multDivOp {
-    Integer resultA = $res1.res;
-    if ($res2.res == 0) {
-        System.out.println("Devision by zero: [" + String.valueOf(resultA) + " / 0]");
-        $res = 0;
-    } else {
-        $res = $res1.res / $res2.res;
+        res1=powOp res2=multDivOpPoint[$res1.res] {$res = $res2.res;};
+
+multDivOpPoint [Integer prev] returns [Integer res] :
+    {$res = $prev;}
+    | MULT res1=powOp res2=multDivOpPoint[$prev * $res1.res] {$res = $res2.res;}
+    | DIV  res1=powOp {
+          Integer r1 = $res1.res;
+           if (r1 == 0) {
+              System.out.println("Devision by zero: [" + String.valueOf($prev) + " / 0]");
+              r1 = 1;
+           }
+    } res2=multDivOpPoint[$prev / r1] {$res = $res2.res;}
+    ;
+
+powOp returns [Integer res] :
+    res1=unar POW res2=powOp {
+        Integer r1 = $res1.res;
+        Integer r2 = $res2.res;
+        Integer powResult = (int) Math.pow(r1, r2);
+        if (powResult == Integer.MAX_VALUE) {
+            System.out.println("Integer overflow after operation: " + String.valueOf(r1) + "**" + String.valueOf(r2) + "; returns Integer.MAX_VALUE");
+        }
+        $res = (int) Math.pow($res1.res, $res2.res);
     }
-}
-    | res1=term {$res = $res1.res;};
+    | res1=unar {$res = $res1.res;}
+    ;
+
+unar returns [Integer res] :
+    res1=term  {$res = $res1.res;}
+    | MINUS res2=term {$res = -$res2.res;}
+    ;
 
 term returns [Integer res] :
       LB res1=expr RB {$res = $res1.res;}
-    | LB MINUS res1=expr RB {
-        Integer r1 = $res1.res;
-        if (r1 == -r1) {
-            System.out.println("Integer overflow after operation: -" + String.valueOf(r1) + "; returns Integer.MAXVALUE");
-            $res = Integer.MAX_VALUE;
-        } else {
-            $res = -r1;
-        }
-    }
     | INT  {$res = Integer.parseInt($INT.text);}
     | ALPS {
         if (!expressionValues.containsKey($ALPS.text)) {

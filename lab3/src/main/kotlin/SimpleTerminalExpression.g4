@@ -3,13 +3,25 @@ grammar SimpleTerminalExpression;
 prog:   (line)* EOF;
 line:   ALPS EQUAL expr LINE_END;
 
-expr   : multDivOp (PLUS|MINUS) expr
-       | multDivOp;
+expr     : multDivOp exprPoint;
 
-multDivOp   : term (MULT|DIV) multDivOp
-            | term;
+exprPoint:
+       | PLUS multDivOp exprPoint
+       | MINUS multDivOp exprPoint;
+
+multDivOp      : powOp multDivOpPoint;
+
+multDivOpPoint :
+       | MULT powOp multDivOpPoint
+       | DIV  powOp multDivOpPoint;
+
+powOp      : term powOpPoint;
+
+powOpPoint :
+       | POW term powOpPoint;
 
 term   : LB expr RB
+       | LB MINUS expr RB
        | ALPS
        | INT;
 
@@ -22,6 +34,8 @@ MINUS   : '-' ;
 
 MULT    : '*' ;
 DIV     : '/' ;
+
+POW     : '**';
 
 LB      : '(' ;
 RB      : ')' ;

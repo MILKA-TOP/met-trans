@@ -1,4 +1,4 @@
-// Generated from C:/Users/SKAT/Desktop/HW/met-trans/lab3/src/main/kotlin\TerminalExpression.g4 by ANTLR 4.10.1
+// Generated from C:/Users/MILKA/Desktop/DESKTOP_ELEMENTS/HW/met_trans/lab3/src/main/kotlin\TerminalExpression.g4 by ANTLR 4.10.1
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +41,16 @@ public interface TerminalExpressionListener extends ParseTreeListener {
 	 */
 	void exitExpr(TerminalExpressionParser.ExprContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TerminalExpressionParser#exprPoint}.
+	 * @param ctx the parse tree
+	 */
+	void enterExprPoint(TerminalExpressionParser.ExprPointContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TerminalExpressionParser#exprPoint}.
+	 * @param ctx the parse tree
+	 */
+	void exitExprPoint(TerminalExpressionParser.ExprPointContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TerminalExpressionParser#multDivOp}.
 	 * @param ctx the parse tree
 	 */
@@ -50,6 +60,36 @@ public interface TerminalExpressionListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMultDivOp(TerminalExpressionParser.MultDivOpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TerminalExpressionParser#multDivOpPoint}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultDivOpPoint(TerminalExpressionParser.MultDivOpPointContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TerminalExpressionParser#multDivOpPoint}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultDivOpPoint(TerminalExpressionParser.MultDivOpPointContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TerminalExpressionParser#powOp}.
+	 * @param ctx the parse tree
+	 */
+	void enterPowOp(TerminalExpressionParser.PowOpContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TerminalExpressionParser#powOp}.
+	 * @param ctx the parse tree
+	 */
+	void exitPowOp(TerminalExpressionParser.PowOpContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TerminalExpressionParser#unar}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnar(TerminalExpressionParser.UnarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TerminalExpressionParser#unar}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnar(TerminalExpressionParser.UnarContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TerminalExpressionParser#term}.
 	 * @param ctx the parse tree

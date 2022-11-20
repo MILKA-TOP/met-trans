@@ -1,8 +1,4 @@
-// Generated from C:/Users/MILKA/Desktop/DESKTOP_ELEMENTS/HW/met_trans/lab3/src/main/kotlin\TerminalExpression.g4 by ANTLR 4.10.1
-
-import java.util.HashMap;
-import java.util.Map;
-
+// Generated from C:/Users/MILKA/Desktop/DESKTOP_ELEMENTS/HW/met_trans/lab3/src/main/kotlin\SimpleTerminalExpression.g4 by ANTLR 4.10.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -13,7 +9,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class TerminalExpressionLexer extends Lexer {
+public class SimpleTerminalExpressionLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.10.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -85,17 +81,13 @@ public class TerminalExpressionLexer extends Lexer {
 	}
 
 
-	Map<String, Integer> expressionValues = new HashMap<>();
-	String currentVar = "";
-
-
-	public TerminalExpressionLexer(CharStream input) {
+	public SimpleTerminalExpressionLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "TerminalExpression.g4"; }
+	public String getGrammarFileName() { return "SimpleTerminalExpression.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
