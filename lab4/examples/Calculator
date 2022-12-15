@@ -1,0 +1,35 @@
+grammar Calculator;
+
+< 'Int' | '0' >
+
+e  : t ePoint[t.value] {res.value = ePoint.value};
+ePoint<var count: Int> :
+    PLUS t ePoint[count + t.value] {res.value = ePoint.value}
+    | MINUS t ePoint[count - t.value] {res.value = ePoint.value}
+    | EPS {res.value = count};
+
+t : f tPoint[f.value] {res.value = tPoint.value};
+tPoint<var count: Int> :
+    MULT f tPoint[count * f.value] {res.value = tPoint.value}
+    | DIV f tPoint[count / f.value] {res.value = tPoint.value}
+    | EPS {res.value = count};
+
+f :
+    LB e {res.value = e.value} RB
+    | INT {res.value = INT.tokenValue.toInt()};
+
+EQUAL   : '=' ;
+LINE_END: ';' ;
+
+PLUS    : '\\+' ;
+MINUS   : '-' ;
+
+MULT    : '\\*' ;
+POW     : '\\*\\*';
+DIV     : '/' ;
+
+LB      : '\\(' ;
+RB      : '\\)' ;
+
+INT     : '[0-9]+' ;
+ALPS    : '[a-zA-Z]+';

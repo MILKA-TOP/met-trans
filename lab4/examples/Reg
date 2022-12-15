@@ -1,0 +1,26 @@
+grammar Reg;
+
+< 'String' | '""' >
+
+e : t e | EPS;
+
+t : d tPoint;
+tPoint : OR d | EPS;
+
+d : f dPoint;
+dPoint: MULT | PLUS | QUESTION | EPS;
+
+f : LB e RB | ALP;
+
+OR: '\\|' ;
+
+PLUS    : '\\+' ;
+QUESTION    : '\\?' ;
+MINUS   : '-' ;
+
+MULT    : '\\*' ;
+
+LB      : '\\(' ;
+RB      : '\\)' ;
+
+ALP     : '[a-z]' ;
