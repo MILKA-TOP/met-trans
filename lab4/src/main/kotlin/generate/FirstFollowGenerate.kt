@@ -15,6 +15,7 @@ class FirstFollowGenerate(val grammarData: GrammarData) {
     init {
         writeMaps()
         firstGenerate()
+        checkFirsts()
 
         for (key in firstMap.keys) {
             print("$key: ")
@@ -108,5 +109,30 @@ class FirstFollowGenerate(val grammarData: GrammarData) {
         }
 
     }
+
+    private fun checkFirsts() {
+        for (nonTerm in grammarData.nonTerminalList) {
+            val firstRuleList = mutableListOf<Set<String>>()
+            for (nonTermRules in nonTerm.targets) {
+                if (nonTermRules.statesList.isNotEmpty()) {
+                    val firstFromTarget = nonTermRules.statesList.first()
+                    val currFirst =
+                        if (grammarData.terminalList.find { it.name == firstFromTarget.name } != null) {
+                            setOf(firstFromTarget.name)
+                        } else {
+                            firstMap[firstFromTarget.name]!!
+                        }
+
+                    if (firstRuleList.contains(currFirst)) {
+                        throw FirstFollowException(nonTerm.name)
+                    }
+                    firstRuleList.add(currFirst)
+                }
+            }
+        }
+    }
+
+    private class FirstFollowException(tokenName: String) :
+        Exception("Rule of this non-terminal state contains error rule: $tokenName")
 
 }
