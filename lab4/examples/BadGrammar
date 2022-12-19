@@ -1,0 +1,8 @@
+grammar Calculator;
+
+< 'String' | '""' >
+
+s  : A A | A B;
+sPoint : A | B;
+A  : 'a';
+B  : 'b';
