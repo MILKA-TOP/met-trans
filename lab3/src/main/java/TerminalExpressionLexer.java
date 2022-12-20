@@ -1,4 +1,4 @@
-// Generated from C:/Users/MILKA/Desktop/DESKTOP_ELEMENTS/HW/met_trans/lab3/src/main/kotlin\TerminalExpression.g4 by ANTLR 4.10.1
+// Generated from C:/Users/SKAT/Desktop/HW/met-trans/lab3/src/main/kotlin\TerminalExpression.g4 by ANTLR 4.10.1
 
 import java.util.HashMap;
 import java.util.Map;

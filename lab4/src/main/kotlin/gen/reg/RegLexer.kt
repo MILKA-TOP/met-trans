@@ -25,15 +25,6 @@ class RegLexer(private val text: String) {
         if (matcher!!.range.first != pos) throw ParseException(text, pos)
 
         var currentValue = matcher!!.value
-        var currentPushed = currentValue
-        /*while (tokenRegex.matches(currentPushed)) {
-            matcher = matcher!!.next()
-            if (matcher == null) break
-
-            val deltaText = matcher!!.value
-            currentValue = currentPushed
-            currentPushed += deltaText
-        }*/
         for (checkedToken in RegToken.TOKEN_LIST) {
             if (checkedToken.first.matches(currentValue)) {
                 val matchedText = matcher!!.value

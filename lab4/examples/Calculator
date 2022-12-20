@@ -1,22 +1,32 @@
 grammar Calculator;
 
-< 'Int' | '0' >
+< 'Double' | '0.0' >
 
-e  : t ePoint[t.value] {res.value = ePoint.value};
-ePoint<var count: Int> :
-    PLUS t ePoint[count + t.value] {res.value = ePoint.value}
-    | MINUS t ePoint[count - t.value] {res.value = ePoint.value}
+@header {
+import kotlin.math.log
+}
+
+e  : logop ePoint[logop.value] {res.value = ePoint.value};
+ePoint<var count: Double> :
+    PLUS logop ePoint[count + logop.value] {res.value = ePoint.value}
+    | MINUS logop ePoint[count - logop.value] {res.value = ePoint.value}
+    | EPS {res.value = count};
+
+logop : t logopPoint[t.value] {res.value = logopPoint.value};
+
+logopPoint<var count: Double> :
+    LOGN logop {res.value = log(count, logop.value)}
     | EPS {res.value = count};
 
 t : f tPoint[f.value] {res.value = tPoint.value};
-tPoint<var count: Int> :
+tPoint<var count: Double> :
     MULT f tPoint[count * f.value] {res.value = tPoint.value}
     | DIV f tPoint[count / f.value] {res.value = tPoint.value}
     | EPS {res.value = count};
 
 f :
     LB e {res.value = e.value} RB
-    | INT {res.value = INT.tokenValue.toInt()};
+    | INT {res.value = INT.tokenValue.toDouble()};
 
 EQUAL   : '=' ;
 LINE_END: ';' ;
@@ -24,6 +34,7 @@ LINE_END: ';' ;
 PLUS    : '\\+' ;
 MINUS   : '-' ;
 
+LOGN     : '//' ;
 MULT    : '\\*' ;
 POW     : '\\*\\*';
 DIV     : '/' ;

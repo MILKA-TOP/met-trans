@@ -1,7 +1,7 @@
 import gen.calc.*
 
 fun main() {
-    val line = "1-2-3"
+    val line = "8//(2)"
     val lexer = CalculatorLexer(line)
     println(CalculatorParser(lexer).eState().value)
 }
