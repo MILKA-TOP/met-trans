@@ -48,15 +48,6 @@ class LexerGenerate {
                 "        if (matcher!!.range.first != pos) throw ParseException(text, pos)\n" +
                 "\n" +
                 "        var currentValue = matcher!!.value\n" +
-                "        var currentPushed = currentValue\n" +
-                "        /*while (tokenRegex.matches(currentPushed)) {\n" +
-                "            matcher = matcher!!.next()\n" +
-                "            if (matcher == null) break\n" +
-                "\n" +
-                "            val deltaText = matcher!!.value\n" +
-                "            currentValue = currentPushed\n" +
-                "            currentPushed += deltaText\n" +
-                "        }*/\n" +
                 "        for (checkedToken in $tokenName.TOKEN_LIST) {\n" +
                 "            if (checkedToken.first.matches(currentValue)) {\n" +
                 "                val matchedText = matcher!!.value\n" +
